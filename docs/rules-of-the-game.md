@@ -1,38 +1,37 @@
 # Game Rules and Planned API
 
-> **Status:** The behavior and endpoints described here are planned and not yet implemented.
+> **Status:** Planned and not yet implemented.
 
 ## Game rules
 
-- A game has one heap containing a given number of matches.
-- The initial number of matches must be positive.
-- The human always plays first.
-- Each player removes between 1 and 3 matches per turn.
-- A player cannot remove more matches than remain.
-- The player who removes the final match loses.
+- A game starts with a positive `initialHeapSize` of matchsticks.
+- Each player removes between 1 and 3 matchsticks without exceeding the number currently in the heap.
+- The player who removes the final matchstick loses.
 
 ## Turn flow
 
-1. The human submits a move.
-2. The API validates and applies the move.
-3. If the human removed the final match, the human loses.
-4. Otherwise, the computer immediately chooses and applies its move.
-5. If the computer removed the final match, the computer loses.
-6. The updated game state is returned.
+The human and computer alternate turns, with the human playing first. After a valid human move, the computer automatically takes its turn. This continues until no matchsticks remain. The API returns the performed moves and updated game state.
 
 ## Planned API
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| `POST` | `/games` | Start a human-first game with `initialMatches` and a computer `strategy` |
+| `POST` | `/games` | Start a game with `initialHeapSize` and an optional `strategy` |
 | `GET` | `/games/{gameId}` | Retrieve the current game state |
-| `POST` | `/games/{gameId}/moves` | Apply the human move, then automatically execute the computer move. |
+| `POST` | `/games/{gameId}/moves` | Apply a human move and automatically execute the computer response |
 
-### Computer strategy
+## Game state
 
-- The client can select `OPTIMAL` or `RANDOM` when starting a game.
-- Selection happens through the `strategy` field in `POST /games`.
-- If `strategy` is omitted, it defaults to `OPTIMAL`.
-- The selected strategy remains fixed for the lifetime of that game.
+- `initialHeapSize`: original heap size; never changes.
+- `currentHeapSize`: current number of matchsticks in the heap.
+- `currentTurn`: `HUMAN` or `COMPUTER`; `null` when the game is over.
+- `gameState`: `GAME_ON` or `GAME_OVER`.
+- `winner`: `null` while `gameState` is `GAME_ON`; `HUMAN` or `COMPUTER` when `gameState` is `GAME_OVER`.
 
-Each game will have a UUID and independent in-memory state. Restarting the application will discard all games.
+A new game starts with equal initial and current heap sizes, `currentTurn` set to `HUMAN`, and `gameState` set to `GAME_ON`.
+
+## Computer strategy
+
+The client selects `OPTIMAL` or `RANDOM` when creating a game. The strategy defaults to `OPTIMAL` and remains fixed throughout the game.
+
+Each game has a UUID and independent in-memory state. Restarting the application discards all games.

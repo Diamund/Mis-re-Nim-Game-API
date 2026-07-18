@@ -1,29 +1,28 @@
 # Misère Nim API
 
-A Kotlin and Spring Boot REST API interview project for playing one-heap Misère Nim against the computer through an HTTP client.
+A Kotlin & Spring Boot REST API project for playing one-heap Misère Nim against the computer through an HTTP client.
 
 > **Status:** Initial scaffold only. The application entry point, configuration, dependencies, and a passing context-load test exist. Game logic, storage, strategies, REST endpoints, and their unit tests are planned but not yet implemented.
 
 ## Technology
 
-- Kotlin 2.2.21
-- Spring Boot 3.5.16
-- Java 17
-- Gradle 8.14.5
-- JSON REST API
-- OpenAPI with Scalar
+* Kotlin 2.2.21
+* Spring Boot 3.5.16
+* Java 17
+* Gradle 8.14.5
+* JSON REST API
+* OpenAPI with Scalar
 
 ## Planned implementation
 
-```text
-GameController → GameService → GameRepository → InMemoryGameRepository
-```
+See [Game Rules and Planned API](docs/rules-of-the-game.md) for the intended game behavior and endpoint contract.
 
-Games will use UUIDs and independent in-memory state. Each game uses either the `OPTIMAL` or `RANDOM` strategy, selected at creation and fixed for that game. `OPTIMAL` is the default.
+Layers: GameController → GameService → GameRepository → InMemoryGameRepository
+
+Games will use UUIDs and independent in-memory state.
+Each game uses either the `OPTIMAL` or `RANDOM` strategy, selected at creation and fixed for that game. `OPTIMAL` is the default.
 
 The scope intentionally excludes a UI and persistent database.
-
-See [Game Rules and Planned API](docs/rules-of-the-game.md) for the intended game behavior and endpoint contract.
 
 ## Build and run
 
@@ -53,7 +52,7 @@ Start a game:
 ```bash
 curl -X POST http://localhost:8080/games \
   -H "Content-Type: application/json" \
-  -d '{"initialMatches":13,"strategy":"OPTIMAL"}'
+  -d '{"initialHeapSize":13,"strategy":"OPTIMAL"}'
 ```
 
 Use the UUID returned by that request:
