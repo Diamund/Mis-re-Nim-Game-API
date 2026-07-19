@@ -1,4 +1,4 @@
-package com.wafa.miserenim.domain
+package com.wafa.miserenim.domain.model
 
 enum class StrategyType {
     OPTIMAL,

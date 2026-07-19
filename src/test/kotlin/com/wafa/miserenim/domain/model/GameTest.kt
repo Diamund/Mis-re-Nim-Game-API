@@ -1,4 +1,4 @@
-package com.wafa.miserenim.domain
+package com.wafa.miserenim.domain.model
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
