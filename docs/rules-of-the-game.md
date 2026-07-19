@@ -1,6 +1,6 @@
 # Game Rules and Planned API
 
-> **Status:** The core game domain is implemented. The API and remaining layers are planned and not yet implemented.
+> **Status:** The core game domain and computer move strategies are implemented. The API and remaining layers are planned and not yet implemented.
 
 ## Game rules
 
@@ -32,6 +32,11 @@ A new game starts with equal initial and current heap sizes, `currentTurn` set t
 
 ## Computer strategy
 
-The client selects `OPTIMAL` or `RANDOM` when creating a game. The strategy defaults to `OPTIMAL` and remains fixed throughout the game.
+The computer move selectors support `OPTIMAL` and `RANDOM` strategies:
+
+- `OPTIMAL` leaves a heap of size `1 mod 4` whenever possible. If no winning move exists, it removes one matchstick.
+- `RANDOM` chooses uniformly from all legal moves, including a move that removes the final matchstick.
+
+The planned API will let the client select a strategy when creating a game. The strategy defaults to `OPTIMAL` and remains fixed throughout the game.
 
 Each game has a UUID and independent in-memory state. Restarting the application discards all games.
