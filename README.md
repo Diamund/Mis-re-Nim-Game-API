@@ -2,7 +2,7 @@
 
 A Kotlin & Spring Boot REST API project for playing one-heap Misère Nim against the computer through an HTTP client.
 
-> **Status:** Initial scaffold only. The application entry point, configuration, dependencies, and a passing context-load test exist. Game logic, storage, strategies, REST endpoints, and their unit tests are planned but not yet implemented.
+> **Status:** The core game domain and its unit tests are implemented. Storage, strategy behavior, services, REST endpoints, and their tests are planned but not yet implemented.
 
 ## Technology
 

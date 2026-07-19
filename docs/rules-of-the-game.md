@@ -1,6 +1,6 @@
 # Game Rules and Planned API
 
-> **Status:** Planned and not yet implemented.
+> **Status:** The core game domain is implemented. The API and remaining layers are planned and not yet implemented.
 
 ## Game rules
 
