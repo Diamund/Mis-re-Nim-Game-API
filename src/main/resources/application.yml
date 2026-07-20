@@ -1,3 +1,6 @@
 spring:
   application:
     name: misere-nim-api
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true

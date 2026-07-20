@@ -2,7 +2,7 @@
 
 A Kotlin & Spring Boot REST API project for playing one-heap Misère Nim against the computer through an HTTP client.
 
-> **Status:** The core game domain, computer move strategies, in-memory repository, and service orchestration are implemented. REST endpoints remain planned.
+> **Status:** The core game domain, computer move strategies, in-memory repository, service orchestration, and REST API are implemented.
 
 ## Technology
 
@@ -15,9 +15,9 @@ A Kotlin & Spring Boot REST API project for playing one-heap Misère Nim against
 
 ## Implementation
 
-See [Game Rules and Planned API](docs/rules-of-the-game.md) for the intended game behavior and endpoint contract.
+See [Game Rules and API](docs/rules-of-the-game.md) for the game behavior and endpoint contract.
 
-Layers: GameController (planned) → GameService → GameRepository → InMemoryGameRepository
+Layers: GameController → GameService → GameRepository → InMemoryGameRepository
 
 Games use UUIDs and independent in-memory state. The repository stores them for the lifetime of the application process.
 Each game uses either the `OPTIMAL` or `RANDOM` strategy, selected at creation and fixed for that game. `OPTIMAL` is the default.
@@ -29,7 +29,8 @@ The scope intentionally excludes a UI and persistent database.
 com/wafa/miserenim/
 
 ├── MisereNimApiApplication.kt
-├── GameController.kt                # later
+├── GameController.kt
+├── RestExceptionHandler.kt
 ├── domain/
 │   ├── model/
 │   │   ├── Game.kt
@@ -42,7 +43,15 @@ com/wafa/miserenim/
 │       ├── ComputerStrategy.kt
 │       ├── OptimalComputerStrategy.kt
 │       └── RandomComputerStrategy.kt
-├── dto/                             # later
+├── dto/
+│   ├── CreateGameRequest.kt
+│   ├── ErrorResponse.kt
+│   ├── GameResponse.kt
+│   ├── MakeMoveRequest.kt
+│   ├── MoveResponse.kt
+│   └── PlayTurnResponse.kt
+├── extensions/
+│   └── ResponseMappings.kt
 ├── repository/
 │   ├── GameRepository.kt
 │   └── InMemoryGameRepository.kt
@@ -61,7 +70,7 @@ Requires JDK 17.
 
 The application runs at `http://localhost:8080`.
 
-Scalar is available at `http://localhost:8080/scalar`. Game operations will appear after the endpoints are implemented.
+Scalar is available at `http://localhost:8080/scalar`, including the game operations.
 
 Run the tests with:
 
@@ -69,9 +78,7 @@ Run the tests with:
 ./gradlew test
 ```
 
-## Planned curl examples
-
-These commands document the intended API and will not work until the endpoints are implemented.
+## Curl examples
 
 Start a game:
 
@@ -80,6 +87,8 @@ curl -X POST http://localhost:8080/games \
   -H "Content-Type: application/json" \
   -d '{"initialHeapSize":13,"strategy":"OPTIMAL"}'
 ```
+
+The `strategy` field is optional and defaults to `OPTIMAL`.
 
 Use the UUID returned by that request:
 
