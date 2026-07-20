@@ -1,6 +1,6 @@
 # Game Rules and Planned API
 
-> **Status:** The core game domain, computer move strategies, and in-memory repository are implemented. The service and API layers are planned and not yet implemented.
+> **Status:** The core game domain, computer move strategies, in-memory repository, and service orchestration are implemented. The REST API remains planned.
 
 ## Game rules
 
@@ -10,7 +10,7 @@
 
 ## Turn flow
 
-The human and computer alternate turns, with the human playing first. After a valid human move, the computer automatically takes its turn. This continues until no matchsticks remain. The API returns the performed moves and updated game state.
+The human and computer alternate turns, with the human playing first. After a valid human move, the computer automatically takes its turn. This continues until no matchsticks remain. The service returns the performed moves and updated game state; the planned API will expose that result.
 
 ## Planned API
 
@@ -37,6 +37,6 @@ The computer move selectors support `OPTIMAL` and `RANDOM` strategies:
 - `OPTIMAL` leaves a heap of size `1 mod 4` whenever possible. If no winning move exists, it removes one matchstick.
 - `RANDOM` chooses uniformly from all legal moves, including a move that removes the final matchstick.
 
-The planned API will let the client select a strategy when creating a game. The strategy defaults to `OPTIMAL` and remains fixed throughout the game.
+The service accepts a strategy when creating a game. The strategy defaults to `OPTIMAL` and remains fixed throughout the game. The planned API will expose that selection to the client.
 
-The in-memory repository stores each game by UUID and keeps game state independent. Restarting the application discards all games. The service and API that will use this storage remain planned.
+The in-memory repository stores each game by UUID and keeps game state independent. Restarting the application discards all games. The service uses this storage to coordinate complete human/computer turns; the REST API remains planned.
