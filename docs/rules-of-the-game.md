@@ -1,6 +1,6 @@
 # Game Rules and Planned API
 
-> **Status:** The core game domain and computer move strategies are implemented. The API and remaining layers are planned and not yet implemented.
+> **Status:** The core game domain, computer move strategies, and in-memory repository are implemented. The service and API layers are planned and not yet implemented.
 
 ## Game rules
 
@@ -39,4 +39,4 @@ The computer move selectors support `OPTIMAL` and `RANDOM` strategies:
 
 The planned API will let the client select a strategy when creating a game. The strategy defaults to `OPTIMAL` and remains fixed throughout the game.
 
-Each game has a UUID and independent in-memory state. Restarting the application discards all games.
+The in-memory repository stores each game by UUID and keeps game state independent. Restarting the application discards all games. The service and API that will use this storage remain planned.

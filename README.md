@@ -2,7 +2,7 @@
 
 A Kotlin & Spring Boot REST API project for playing one-heap Misère Nim against the computer through an HTTP client.
 
-> **Status:** The core game domain, computer move strategies, and their unit tests are implemented. Storage, services, REST endpoints, and their tests are planned but not yet implemented.
+> **Status:** The core game domain, computer move strategies, and in-memory repository are implemented. Services, REST endpoints, and their tests are planned but not yet implemented.
 
 ## Technology
 
@@ -13,20 +13,19 @@ A Kotlin & Spring Boot REST API project for playing one-heap Misère Nim against
 * JSON REST API
 * OpenAPI with Scalar
 
-## Planned implementation
+## Implementation
 
 See [Game Rules and Planned API](docs/rules-of-the-game.md) for the intended game behavior and endpoint contract.
 
 Layers: GameController → GameService → GameRepository → InMemoryGameRepository
 
-Games will use UUIDs and independent in-memory state.
+Games use UUIDs and independent in-memory state. The repository stores them for the lifetime of the application process.
 Each game uses either the `OPTIMAL` or `RANDOM` strategy, selected at creation and fixed for that game. `OPTIMAL` is the default.
 
 The scope intentionally excludes a UI and persistent database.
 
 ### Project structure
 
-```text
 com/wafa/miserenim/
 
 ├── MisereNimApiApplication.kt
@@ -43,9 +42,10 @@ com/wafa/miserenim/
 │       ├── OptimalComputerStrategy.kt
 │       └── RandomComputerStrategy.kt
 ├── dto/                             # later
-├── service/                         # later
-└── repository/                      # later
-```
+├── repository/
+│   ├── GameRepository.kt
+│   └── InMemoryGameRepository.kt
+└── service/                         # later
 
 ## Build and run
 
