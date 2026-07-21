@@ -1,76 +1,58 @@
 # Misère Nim API
 
-A Kotlin & Spring Boot REST API project for playing one-heap Misère Nim against the computer through an HTTP client.
-
-> **Status:** The core game domain, computer move strategies, in-memory repository, service orchestration, and REST API are implemented.
+A Kotlin and Spring Boot REST API for playing one-heap Misère Nim against the computer through Scalar, curl, or another HTTP client.
 
 ## Technology
 
-* Kotlin 2.2.21
-* Spring Boot 3.5.16
-* Java 17
-* Gradle 8.14.5
-* JSON REST API
-* OpenAPI with Scalar
+- Kotlin 2.2.21
+- Spring Boot 3.5.16
+- Java 17
+- Gradle 8.14.5
+- JSON REST API
+- OpenAPI with Scalar
 
-## Implementation
+## Design
+
+GameController → GameService → GameRepository → InMemoryGameRepository
+
+Games have UUIDs and independent in-memory state. Each game uses either the `OPTIMAL` or `RANDOM` computer strategy, selected at creation and fixed for that game. `OPTIMAL` is the default.
+
+Game data remains available for the lifetime of the application process and is discarded when the application restarts. The project intentionally excludes a dedicated UI and persistent database.
 
 See [Game Rules and API](docs/rules-of-the-game.md) for the game behavior and endpoint contract.
 
-Layers: GameController → GameService → GameRepository → InMemoryGameRepository
-
-Games use UUIDs and independent in-memory state. The repository stores them for the lifetime of the application process.
-Each game uses either the `OPTIMAL` or `RANDOM` strategy, selected at creation and fixed for that game. `OPTIMAL` is the default.
-
-The scope intentionally excludes a UI and persistent database.
-
 ### Project structure
 
+```text
 com/wafa/miserenim/
-
 ├── MisereNimApiApplication.kt
 ├── GameController.kt
 ├── RestExceptionHandler.kt
 ├── domain/
-│   ├── model/
-│   │   ├── Game.kt
-│   │   ├── Move.kt
-│   │   ├── Player.kt
-│   │   ├── GameState.kt
-│   │   ├── StrategyType.kt
-│   │   └── TurnResult.kt
-│   └── strategy/
-│       ├── ComputerStrategy.kt
-│       ├── OptimalComputerStrategy.kt
-│       └── RandomComputerStrategy.kt
-├── dto/
-│   ├── CreateGameRequest.kt
-│   ├── ErrorResponse.kt
-│   ├── GameResponse.kt
-│   ├── MakeMoveRequest.kt
-│   ├── MoveResponse.kt
-│   └── PlayTurnResponse.kt
-├── extensions/
-│   └── ResponseMappings.kt
-├── repository/
-│   ├── GameRepository.kt
-│   └── InMemoryGameRepository.kt
-└── service/
-    ├── GameNotFoundException.kt
-    └── GameService.kt
+│   ├── model/        # Game state and domain values
+│   └── strategy/     # Optimal and random computer strategies
+├── dto/              # HTTP request and response models
+├── extensions/       # Domain-to-response mappings
+├── repository/       # Repository contract and in-memory implementation
+└── service/          # Game orchestration and application errors
+```
 
 ## Build and run
 
-Requires JDK 17.
+Requires JDK 17. The included Gradle Wrapper provides the required Gradle version.
 
 ```bash
 ./gradlew build
 ./gradlew bootRun
 ```
 
-The application runs at `http://localhost:8080`.
+On Windows, use `gradlew.bat` instead of `./gradlew`.
 
-Scalar is available at `http://localhost:8080/scalar`, including the game operations.
+Once started, the application is available at:
+
+- API: `http://localhost:8080`
+- Scalar: `http://localhost:8080/scalar`
+- OpenAPI specification: `http://localhost:8080/v3/api-docs`
 
 Run the tests with:
 
@@ -78,9 +60,9 @@ Run the tests with:
 ./gradlew test
 ```
 
-## Curl examples
+## API usage
 
-Start a game:
+### Start a game
 
 ```bash
 curl -X POST http://localhost:8080/games \
@@ -90,13 +72,13 @@ curl -X POST http://localhost:8080/games \
 
 The `strategy` field is optional and defaults to `OPTIMAL`.
 
-Use the UUID returned by that request:
+Copy the UUID returned in the response:
 
 ```bash
 export GAME_ID="<returned-game-id>"
 ```
 
-Make a human move:
+### Make a human move
 
 ```bash
 curl -X POST "http://localhost:8080/games/$GAME_ID/moves" \
@@ -104,7 +86,9 @@ curl -X POST "http://localhost:8080/games/$GAME_ID/moves" \
   -d '{"matchesToRemove":2}'
 ```
 
-Retrieve the game state:
+If the game continues, the response contains both the human move and the automatic computer move.
+
+### Retrieve the game state
 
 ```bash
 curl "http://localhost:8080/games/$GAME_ID"
