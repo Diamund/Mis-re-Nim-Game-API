@@ -11,16 +11,6 @@ A Kotlin and Spring Boot REST API for playing one-heap Misère Nim against the c
 - JSON REST API
 - OpenAPI with Scalar
 
-## Design
-
-GameController → GameService → GameRepository → InMemoryGameRepository
-
-Games have UUIDs and independent in-memory state. Each game uses either the `OPTIMAL` or `RANDOM` computer strategy, selected at creation and fixed for that game. `OPTIMAL` is the default.
-
-Game data remains available for the lifetime of the application process and is discarded when the application restarts. The project intentionally excludes a dedicated UI and persistent database.
-
-See [Game Rules and API](docs/rules-of-the-game.md) for the game behavior and endpoint contract.
-
 ### Project structure
 
 ```text
@@ -28,6 +18,7 @@ com/wafa/miserenim/
 ├── MisereNimApiApplication.kt
 ├── GameController.kt
 ├── RestExceptionHandler.kt
+├── api/               # HTTP routes, validation, and OpenAPI contract
 ├── domain/
 │   ├── model/        # Game state and domain values
 │   └── strategy/     # Optimal and random computer strategies
@@ -36,6 +27,19 @@ com/wafa/miserenim/
 ├── repository/       # Repository contract and in-memory implementation
 └── service/          # Game orchestration and application errors
 ```
+
+## Design
+
+GameApi → GameController → GameService → GameRepository → InMemoryGameRepository
+
+`GameApi` defines the HTTP routes, validation, and OpenAPI contract. `GameController` implements that contract and delegates game orchestration to `GameService`.
+
+Games have UUIDs and independent in-memory state. Each game uses either the `OPTIMAL` or `RANDOM` computer strategy, selected at creation and fixed for that game. `OPTIMAL` is the default.
+
+Game data remains available for the lifetime of the application process and is discarded when the application restarts. The project intentionally excludes a dedicated UI and persistent database.
+
+See [Game Rules and API](docs/rules-of-the-game.md) for the game behavior and endpoint contract.
+
 
 ## Build and run
 
